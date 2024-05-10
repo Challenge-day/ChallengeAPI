@@ -2,7 +2,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from config import settings
+from ..core.config import settings
 
 POSTGRES_URL = settings.POSTGRES_PATH
 print(POSTGRES_URL)
