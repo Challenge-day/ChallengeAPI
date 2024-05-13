@@ -33,14 +33,15 @@ def create_user(body: UserRegisterModel, session: Session):
     is_db_full = session.query(User).first()
     
     
-    hashed_password = get_password_hash(password=body.password)
+    # hashed_password = get_password_hash(password=body.password)
     user = User(email=body.email,
-                password=hashed_password,
+                # password=hashed_password,
                 username=body.username,
                 )
     user.first_name = None if body.first_name == "string" else body.first_name
     user.last_name = None if body.last_name == "string" else body.last_name
     user.username = None if body.username == "string" else body.username
+    
     if not is_db_full:
         user.role = 'admin'
     user = update_user(user, session)
