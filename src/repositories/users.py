@@ -1,7 +1,7 @@
 
 from sqlalchemy.orm import Session
 
-from models.user import User
+from models.user import Userв
 from schemas.user import UserRegisterModel
 
 def update_user(user: User, session: Session):
@@ -17,7 +17,6 @@ def update_user(user: User, session: Session):
     session.commit()
     session.refresh(user)
     return user
-
 
 def create_user(body: UserRegisterModel, session: Session):
     """
