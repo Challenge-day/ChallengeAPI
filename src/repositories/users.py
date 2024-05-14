@@ -33,7 +33,7 @@ def create_user(body: UserRegisterModel, session: Session):
     is_db_full = session.query(User).first()
     
     
-    # hashed_password = get_password_hash(password=body.password)
+    # TODO hashed_password = get_password_hash(password=body.password)
     user = User(email=body.email,
                 # password=hashed_password,
                 username=body.username,
