@@ -3,12 +3,15 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from .config import settings
+from src.models.base import Base
 
-POSTGRES_URL = settings.POSTGRES_PATH
-# print(POSTGRES_URL)
-engine = create_engine(POSTGRES_URL, echo=False, max_overflow=5)
+POSTGRES_URI = settings.POSTGRES_PATH
 
+engine = create_engine(POSTGRES_URI, echo=False, max_overflow=5)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+def init_db():
+    Base.metadata.create_all(bind=engine)
 
 def get_db():
     '''

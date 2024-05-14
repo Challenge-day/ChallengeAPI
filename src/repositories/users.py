@@ -18,7 +18,6 @@ def update_user(user: User, session: Session):
     session.refresh(user)
     return user
 
-
 def create_user(body: UserRegisterModel, session: Session):
     """
     The create_user function creates a new user in the database

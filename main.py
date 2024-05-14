@@ -3,7 +3,7 @@ import uvicorn
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 from fastapi import FastAPI, Depends, HTTPException, status
-from src.core.connect import get_db
+from src.core.connect import get_db, init_db
 
 app = FastAPI(swagger_ui_parameters={"operationsSorter": "method"})
 
@@ -43,3 +43,4 @@ def healthchecker(db: Session = Depends(get_db)):
 
 if __name__ == '__main__':
     uvicorn.run(app="main:app", reload=True, host="127.0.0.1", port=8000)
+    init_db()
