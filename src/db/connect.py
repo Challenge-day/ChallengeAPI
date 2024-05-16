@@ -3,15 +3,12 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from .config import settings
-from src.models.base import Base
 
 POSTGRES_URI = settings.POSTGRES_PATH
 
-engine = create_engine(POSTGRES_URI, echo=False, max_overflow=5)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+engine = create_engine(POSTGRES_URI, echo=False, pool_size=5, max_overflow=0)
+DBSession = sessionmaker(bind=engine)
 
-def init_db():
-    Base.metadata.create_all(bind=engine)
 
 def get_db():
     '''
@@ -21,7 +18,7 @@ def get_db():
     Session to work with DB  
     
     '''
-    db = SessionLocal()
+    db = DBSession()
     try:
         yield db
     except Exception as e:

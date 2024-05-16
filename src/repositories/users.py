@@ -1,7 +1,7 @@
 
 from sqlalchemy.orm import Session
 
-from models.user import User
+from models.entity import User
 from schemas.user import UserRegisterModel
 
 def update_user(user: User, session: Session):

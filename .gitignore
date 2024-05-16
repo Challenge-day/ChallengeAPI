@@ -163,3 +163,7 @@ test.db
 .vscode/
 .pytest_cache/
 postgres-data/
+migrations/versions/1bf65c4a441d_init.py
+migrations/versions/1bf65c4a441d_init.py
+migrations/versions/7e7d1bbee1d0_init.py
+migrations/versions/c169e4206e81_init.py
