@@ -1,61 +1,15 @@
-from datetime import datetime
+from pydantic import BaseModel
+from typing import List
+from .task import TaskResponse
 
-from pydantic import BaseModel, EmailStr, Field
-
-
-class UserLoginModel(BaseModel):
-    email: EmailStr = 'user@gmail.com'
-    password: str = 'qwerty'
-
-class UserRegisterModel(BaseModel):
-    email: EmailStr = 'user@gmail.com'
-    password: str = 'qwerty'
+class UserResponse(BaseModel):
+    id: int
+    tg_id: int
     username: str
     first_name: str
     last_name: str
-
-class UserProfileModel(BaseModel):
-    email: EmailStr
-    first_name: str | None
-    last_name: str | None
-    username: str | None
-    created_at: datetime
-    avatar: str
-    
-class UserRespond(BaseModel):
-    id: int
-    username: str
-    email: EmailStr
-    username: str | None
-    first_name: str | None
-    last_name: str | None
-    avatar: str
-    role: str
-
-class UserPhotoRespond(BaseModel):
-    username: str | None = None
-    email: EmailStr
+    points: int
+    tasks: List[TaskResponse]
 
     class Config:
-        from_attributes = True
-
-
-class TokenResponse(BaseModel):
-    access_token: str
-    refresh_token: str
-    token_type: str
-
-class UserUsername(BaseModel):
-    username: str
-
-
-class UserFirstname(BaseModel):
-    first_name: str
-
-
-class UserLastname(BaseModel):
-    last_name: str
-
-
-class NewPassword(BaseModel):
-    password: str = Field()
+        orm_mode = True
