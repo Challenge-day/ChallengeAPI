@@ -9,6 +9,10 @@ class UserCreate(BaseModel):
     first_name: str
     language_code: str
 
+class UserLogin(BaseModel):
+    email: str
+    password: str
+
 class MessageCreate(BaseModel):
     message_id: int
     user_id: int
