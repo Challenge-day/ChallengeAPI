@@ -4,9 +4,9 @@ from sqlalchemy.orm import sessionmaker
 
 from .config import settings
 
-POSTGRES_URI = settings.POSTGRES_PATH
+SQLALCHEMY_URL = settings.POSTGRES_PATH
 
-engine = create_engine(POSTGRES_URI, echo=False, pool_size=5, max_overflow=0)
+engine = create_engine(SQLALCHEMY_URL, echo=False, pool_size=5, max_overflow=0)
 DBSession = sessionmaker(bind=engine)
 
 
