@@ -1,47 +1,24 @@
-
 from sqlalchemy.orm import Session
+from src.models.entity import User
 
-from models.entity import User
-from schemas.user import UserRegisterModel
+class UserRepository:
+    def __init__(self, session: Session):
+        self.session = session
 
-def update_user(user: User, session: Session):
-    """
-        Function update_user user and session to work with the database
-        Args:
-        user: User: user's object
-        session: Session: Pass a function session object
-        Returns:
-        Updated user object
-    """
-    session.add(user)
-    session.commit()
-    session.refresh(user)
-    return user
+    def get_by_id(self, user_id: int) -> User:
+        return self.session.query(User).filter(User.id == user_id).first()
 
-def create_user(body: UserRegisterModel, session: Session):
-    """
-    The create_user function creates a new user in the database
+    def get_by_telegram_id(self, telegram_id: int) -> User:
+        return self.session.query(User).filter(User.telegram_id == telegram_id).first()
 
-    Args:
-    email: str: We specify the email and password in the body of the request of the user we want to create
-    session: Session: Pass a function session object
+    def add(self, user: User):
+        self.session.add(user)
+        self.session.commit()
 
-    Returns:
-    User class object we created in the database
-    """
-    is_db_full = session.query(User).first()
-    
-    
-    # TODO hashed_password = get_password_hash(password=body.password)
-    user = User(email=body.email,
-                # password=hashed_password,
-                username=body.username,
-                )
-    user.first_name = None if body.first_name == "string" else body.first_name
-    user.last_name = None if body.last_name == "string" else body.last_name
-    user.username = None if body.username == "string" else body.username
-    
-    if not is_db_full:
-        user.role = 'admin'
-    user = update_user(user, session)
-    return user
+    def update(self, user: User):
+        self.session.merge(user)
+        self.session.commit()
+
+    def delete(self, user: User):
+        self.session.delete(user)
+        self.session.commit()
