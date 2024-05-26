@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import Optional
 
 class UserCreate(BaseModel):
     username: str
@@ -29,4 +29,4 @@ class MessageResponse(BaseModel):
     command: Optional[str]
 
     class Config:
-        orm_mode = True
+        from_attributes = True
