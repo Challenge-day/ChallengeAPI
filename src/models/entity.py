@@ -48,7 +48,6 @@ class Referral(Base):
 
 class Message(Base):
     __tablename__ = 'messages'
-    id: Mapped[int] = mapped_column(primary_key=True)
     message_id: Mapped[int] = mapped_column(Integer, nullable=False)
     user_id: Mapped[int] = mapped_column(ForeignKey('users.id'), nullable=False)
     chat_id: Mapped[int] = mapped_column(BigInteger, nullable=False)
