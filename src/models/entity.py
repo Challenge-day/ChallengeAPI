@@ -1,7 +1,7 @@
 import enum
 from datetime import datetime
-
-from sqlalchemy import String, Enum, Boolean, Integer, DateTime, BigInteger, ForeignKey
+from typing import List, Optional
+from sqlalchemy import String, Enum, Boolean, Integer, DateTime, BigInteger, ForeignKey, func
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 class Base(DeclarativeBase):
@@ -21,6 +21,9 @@ class User(Base):
     username: Mapped[str] = mapped_column(String(50), nullable=False)
     tasks: Mapped[List["Task"]] = relationship("Task", back_populates="user")
     points: Mapped[int] = mapped_column(Integer, default=0)
+    messages: Mapped[list["Message"]] = relationship("Message", back_populates="user")
+    language_code: Mapped[str] = mapped_column(String(10))
+    role: Mapped[Role] = mapped_column(Enum(Role), default=Role.user, nullable=True)
     referrals: Mapped[List["Referral"]] = relationship("Referral", back_populates="referrer")
     
     def update_username(self, new_username: str):
@@ -35,7 +38,6 @@ class Task(Base):
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey('users.id'), nullable=False) 
     user: Mapped[User] = relationship("User", back_populates="tasks")
 
-
 class Referral(Base):
     __tablename__ = "referrals"
     referrer_id: Mapped[int] = mapped_column(Integer, ForeignKey('users.id'))
@@ -43,23 +45,6 @@ class Referral(Base):
     referrer: Mapped["User"] = relationship("User", foreign_keys=[referrer_id], back_populates="referrals")
     referred: Mapped["User"] = relationship("User", foreign_keys=[referred_id])
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
-
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    username: Mapped[str] = mapped_column(String(50))
-    email: Mapped[str] = mapped_column(String(150), nullable=False, unique=True)
-    password: Mapped[str] = mapped_column(String(255), nullable=False)
-    telegram_id: Mapped[int] = mapped_column(BigInteger, unique=True, nullable=False)
-    first_name: Mapped[str] = mapped_column(String(50))
-    language_code: Mapped[str] = mapped_column(String(10))
-
-    role: Mapped[Role] = mapped_column(
-        Enum(Role), default=Role.user, nullable=True
-    )
-
-    confirmed: Mapped[bool] = mapped_column(Boolean, default=False, nullable=True)
-
-    messages: Mapped[list["Message"]] = relationship("Message", back_populates="user")
 
 class Message(Base):
     __tablename__ = 'messages'
