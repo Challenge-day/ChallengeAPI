@@ -1,4 +1,19 @@
-FROM python:3.10-slim-buster
+FROM python:3.10
+
+ENV APP_HOME /app
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+WORKDIR $APP_HOME
+
+COPY pyproject.toml $APP_HOME/pyproject.toml
+COPY poetry.lock $APP_HOME/poetry.lock
+
+RUN pip install poetry
+RUN poetry config virtualenvs.create false && poetry install --only main
+
 COPY . .
-RUN pip install --no-cache-dir -r requirements.txt
+
+EXPOSE 8000
+
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
