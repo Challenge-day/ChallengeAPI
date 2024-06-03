@@ -75,25 +75,6 @@ def login_user(user: UserLogin, db: Session = Depends(get_db)):
         return {"message": "Login successful"}
     else:
         raise HTTPException(status_code=400, detail="Invalid credentials")
-    
-@app.post("/messages/", response_model=MessageResponse)
-def create_message(message: MessageCreate, db: Session = Depends(get_db)):
-    message_repo = MessageRepository(db)
-    new_message = Message(
-        message_id=message.message_id,
-        user_id=message.user_id,
-        chat_id=message.chat_id,
-        text=message.text,
-        command=message.command
-    )
-    message_repo.add(new_message)
-    return new_message
-
-@app.get("/messages/{user_id}", response_model=List[MessageResponse])
-def read_messages(user_id: int, db: Session = Depends(get_db)):
-    message_repo = MessageRepository(db)
-    messages = message_repo.get_by_user_id(user_id)
-    return messages
 
 if __name__ == '__main__':
     uvicorn.run(app="main:app", reload=True, host="127.0.0.1", port=8000)
