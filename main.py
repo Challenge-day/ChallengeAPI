@@ -13,8 +13,8 @@ from src.schemas.schemas import UserCreate, UserLogin, MessageCreate, MessageRes
 from src.routes import referrals
 
 app = FastAPI(swagger_ui_parameters={"operationsSorter": "method"})
+app.include_router(referrals.router, prefix="/api", tags=["referrals"])
 
-# @app.get("/", name="root")
 @app.get("/", name="root")
 def read_root():
     """
