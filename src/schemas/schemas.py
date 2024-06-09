@@ -20,13 +20,3 @@ class MessageCreate(BaseModel):
     text: str
     command: Optional[str] = None
 
-class MessageResponse(BaseModel):
-    id: int
-    message_id: int
-    user_id: int
-    chat_id: int
-    text: str
-    command: Optional[str]
-
-    class Config:
-        from_attributes = True

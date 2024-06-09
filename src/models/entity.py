@@ -45,14 +45,3 @@ class Referral(Base):
     referrer: Mapped["User"] = relationship("User", foreign_keys=[referrer_id], back_populates="referrals")
     referred: Mapped["User"] = relationship("User", foreign_keys=[referred_id])
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
-
-class Message(Base):
-    __tablename__ = 'messages'
-    message_id: Mapped[int] = mapped_column(Integer, nullable=False)
-    user_id: Mapped[int] = mapped_column(ForeignKey('users.id'), nullable=False)
-    chat_id: Mapped[int] = mapped_column(BigInteger, nullable=False)
-    text: Mapped[str] = mapped_column(String(4096), nullable=False)
-    date: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, nullable=False)
-    command: Mapped[str] = mapped_column(String(255), nullable=True)
-
-    user: Mapped["User"] = relationship("User", back_populates="messages")
