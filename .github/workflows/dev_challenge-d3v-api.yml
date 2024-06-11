@@ -25,19 +25,15 @@ jobs:
         run: |
           poetry config virtualenvs.create false
           poetry install --only main
+          
+      - name: Zip artifact for deployment
+        run: zip release.zip ./* -r
 
-      - name: Build Docker image
-        run: |
-          docker build -t challengeday/backend-api .
-
-      - name: Login to Docker Hub
-        run: |
-          echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
-
-      - name: Push Docker image
-        run: |
-          docker tag challengeday/backend-api:latest challengeday/backend-api:${{ github.sha }}
-          docker push challengeday/backend-api:${{ github.sha }}
+      - name: Upload artifact for deployment jobs
+        uses: actions/upload-artifact@v3
+        with:
+          name: python-app
+          path: release.zip
 
   deploy:
     runs-on: ubuntu-latest
@@ -46,7 +42,7 @@ jobs:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
-      id-token: write # This is required for requesting the JWT
+      id-token: write #This is required for requesting the JWT
 
     steps:
       - name: Download artifact from build job
@@ -57,17 +53,17 @@ jobs:
       - name: Unzip artifact for deployment
         run: unzip release.zip
 
+      
       - name: Login to Azure
         uses: azure/login@v1
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_0B84CE78EBDB43D5B388D919B80C1B75 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_A91AA0C3C79E4582935F24FA821390A0 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_70A0206C78884E8E91124A9F21307E2D }}
 
-      - name: Deploy to Azure Web App
+      - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
         id: deploy-to-webapp
         with:
           app-name: 'challenge-d3v-api'
           slot-name: 'Production'
-          images: 'challengeday/backend-api:${{ github.sha }}'
