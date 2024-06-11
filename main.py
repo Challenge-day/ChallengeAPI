@@ -4,11 +4,12 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text
 from fastapi import FastAPI, Depends, HTTPException, status
 
-from src.db.connect import get_db
+# from src.db.connect import get_db
 from src.routes import referrals, users
 
 
 app = FastAPI(swagger_ui_parameters={"operationsSorter": "method"})
+
 app.include_router(referrals.router, prefix="/api", tags=["referrals"])
 app.include_router(users.router, prefix="/api", tags=["users"])
 
