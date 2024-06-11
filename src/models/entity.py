@@ -1,7 +1,7 @@
 import enum
 from datetime import datetime
-from typing import List, Optional
-from sqlalchemy import String, Enum, Boolean, Integer, DateTime, BigInteger, ForeignKey, func
+from typing import List
+from sqlalchemy import String, Enum, Boolean, Integer, DateTime, ForeignKey, func
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 class Base(DeclarativeBase):
@@ -21,7 +21,6 @@ class User(Base):
     username: Mapped[str] = mapped_column(String(50), nullable=False)
     tasks: Mapped[List["Task"]] = relationship("Task", back_populates="user")
     points: Mapped[int] = mapped_column(Integer, default=0)
-    messages: Mapped[list["Message"]] = relationship("Message", back_populates="user")
     language_code: Mapped[str] = mapped_column(String(10))
     role: Mapped[Role] = mapped_column(Enum(Role), default=Role.user, nullable=True)
     referrals: Mapped[List["Referral"]] = relationship("Referral", back_populates="referrer")

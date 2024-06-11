@@ -8,8 +8,8 @@ class UserRepository:
     def get_by_id(self, user_id: int) -> User:
         return self.session.query(User).filter(User.id == user_id).first()
 
-    def get_by_telegram_id(self, telegram_id: int) -> User:
-        return self.session.query(User).filter(User.telegram_id == telegram_id).first()
+    def get_by_tg_id(self, tg_id: int) -> User:
+        return self.session.query(User).filter(User.tg_id == tg_id).first()
     
     def get_by_email(self, email: str) -> User:
         return self.session.query(User).filter(User.email == email).first()
