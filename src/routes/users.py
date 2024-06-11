@@ -9,6 +9,15 @@ router = APIRouter()
 
 @router.post("/users/", response_model=UserCreate)
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
+    """
+    Create a new user in the system.
+
+    - **username**: The user's username
+    - **password**: The user's password
+    - **telegram_id**: The user's Telegram ID
+    - **first_name**: The user's first name
+    - **language_code**: The user's language code
+    """
     user_repo = UserRepository(db)
     db_user = user_repo.get_by_tg_id(user.tg_id)
     if db_user:
@@ -27,6 +36,12 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
 
 @router.post("/login/")
 def login_user(user: UserLogin, db: Session = Depends(get_db)):
+    """
+    Authenticate a user and provide access to the application.
+
+    - **email**: The user's email address
+    - **password**: The user's password
+    """
     user_repo = UserRepository(db)
     if user_repo.validate_user(user.password):
         return {"message": "Login successful"}
