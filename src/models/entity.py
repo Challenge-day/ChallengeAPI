@@ -9,25 +9,24 @@ class Base(DeclarativeBase):
     id: Mapped[int] = mapped_column(primary_key=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
-    
-class Role(enum.Enum):
-    admin: str = "admin"
-    moderator: str = "moderator"
-    user: str = "user"
 
 class User(Base):
     __tablename__ = 'users'
     tg_id: Mapped[int] = mapped_column(Integer, nullable=False, unique=True)
     username: Mapped[str] = mapped_column(String(50), nullable=False)
+    lastname: Mapped[str] = mapped_column(String(50), nullable=False)
+    chat_id: Mapped[int] = mapped_column(Integer, unique=True)
     tasks: Mapped[List["Task"]] = relationship("Task", back_populates="user")
     points: Mapped[int] = mapped_column(Integer, default=0)
     language_code: Mapped[str] = mapped_column(String(10))
-    role: Mapped[Role] = mapped_column(Enum(Role), default=Role.user, nullable=True)
     referrals: Mapped[List["Referral"]] = relationship("Referral", back_populates="referrer")
     
-    def update_username(self, new_username: str):
-        if self.username != new_username:
-            self.username = new_username
+    # def update_username(self, new_username: str):
+    #     if self.username != new_username:
+    #         self.username = new_username
+    @staticmethod
+    def get_user_by_chat_id(session, chat_id):
+        return session.query(User).filter_by(chat_id=chat_id).first()
 
 class Task(Base):
     __tablename__ = "tasks"
