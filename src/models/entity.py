@@ -15,7 +15,7 @@ class User(Base):
     tg_id: Mapped[int] = mapped_column(Integer, nullable=False, unique=True)
     username: Mapped[str] = mapped_column(String(50), nullable=False)
     lastname: Mapped[str] = mapped_column(String(50), nullable=False)
-    chat_id: Mapped[int] = mapped_column(Integer, unique=True)
+    chat_id: Mapped[int] = mapped_column(Integer, ForeignKey('users.id'), unique=True)
     tasks: Mapped[List["Task"]] = relationship("Task", back_populates="user")
     points: Mapped[int] = mapped_column(Integer, default=0)
     language_code: Mapped[str] = mapped_column(String(10))
