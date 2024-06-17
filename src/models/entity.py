@@ -62,11 +62,11 @@ class Referral(Base):
 class Auth(Base):
     __tablename__ = 'auth'
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    name: Mapped[str] = mapped_column(String(50), nullable=False)
+    username: Mapped[str] = mapped_column(String(50), nullable=False)
     chat_id: Mapped[int] = mapped_column(BigInteger, nullable=False)
 
-    def __init__(self, name, chat_id):
-        self.name = name
+    def __init__(self, username, chat_id):
+        self.username = username
         self.chat_id = chat_id
 
 

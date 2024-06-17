@@ -1,11 +1,20 @@
 # main.py
 import uvicorn
-from fastapi import FastAPI
+import asyncio
 
+from fastapi import FastAPI
+from contextlib import asynccontextmanager
+
+from src.start_bot import start_bot
 from src.routes import referrals, users, auth
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await start_bot()
+    yield
 
-app = FastAPI(swagger_ui_parameters={"operationsSorter": "method"})
+
+app = FastAPI(lifespan=lifespan, swagger_ui_parameters={"operationsSorter": "method"})
 
 app.include_router(referrals.router, prefix="/api", tags=["referrals"])
 app.include_router(users.router, prefix="/api", tags=["users"])

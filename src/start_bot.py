@@ -1,6 +1,6 @@
 import logging
-from telegram.ext import Application, CommandHandler, MessageHandler, CallbackQueryHandler
-
+import asyncio
+from telegram.ext import Application, CommandHandler
 
 from src.db.config import settings
 from src.db.connect import engine
@@ -17,12 +17,21 @@ logger = logging.getLogger(__name__)
 
 TOKEN = settings.TELEGRAM_TOKEN
 
-def main() -> None:
+async def start_bot():
     application = Application.builder().token(TOKEN).build()
     application.add_handler(CommandHandler("start", start))
-    application.run_polling()
+    # application.run_polling()
 
+    async def on_startup(app):
+        await app.initialize()
+        await app.start()
 
-
-if __name__ == "__main__":
-    main()
+    async def on_shutdown(app):
+        await app.stop()
+    
+    await on_startup(application)
+    try:
+        await asyncio.sleep(60) 
+            
+    except asyncio.CancelledError:
+        await on_shutdown(application)
