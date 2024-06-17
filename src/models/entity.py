@@ -1,7 +1,7 @@
 import enum
 from datetime import datetime
 from typing import List
-from sqlalchemy import String, Enum, Boolean, Integer, DateTime, ForeignKey, func
+from sqlalchemy import String, Enum, Boolean, Integer, DateTime, ForeignKey, func, Float
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 class Base(DeclarativeBase):
@@ -44,3 +44,12 @@ class Referral(Base):
     referrer: Mapped["User"] = relationship("User", foreign_keys=[referrer_id], back_populates="referrals")
     referred: Mapped["User"] = relationship("User", foreign_keys=[referred_id])
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+
+class MiningSession(Base):
+    __tablename__ = "mining_session"
+    tg_id: Mapped[int] = mapped_column(Integer, nullable=False, unique=True)
+    start_time: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    end_time: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    speed: Mapped[float] = mapped_column(Float, default=1.000)
+    earned_chl: Mapped[float] = mapped_column(Float, default=0.0)
+    last_checked_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now())
