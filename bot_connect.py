@@ -1,9 +1,9 @@
 import logging
-from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackQueryHandler
+from telegram.ext import Application, CommandHandler, MessageHandler, CallbackQueryHandler
 
 
 from src.db.config import settings
-from src.db.connect import engine, DBSession
+from src.db.connect import engine
 from src.models.entity import Base
 from src.repositories.users import start
 
@@ -21,6 +21,7 @@ def main() -> None:
     application = Application.builder().token(TOKEN).build()
     application.add_handler(CommandHandler("start", start))
     application.run_polling()
+
 
 
 if __name__ == "__main__":
