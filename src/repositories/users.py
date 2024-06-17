@@ -2,7 +2,7 @@ from telegram import Update
 from telegram.ext import ContextTypes
 from src.db.connect import DBSession
 
-from src.models.entity import User, Base
+from src.models.entity import User
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     with DBSession() as session:
