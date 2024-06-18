@@ -6,7 +6,6 @@ class MiningStart(BaseModel):
     tg_id: str
     start_time: Optional[datetime]
     end_time: Optional[datetime]
-    speed: float
     earned_chl: float
 
 class MiningStatus(BaseModel):
