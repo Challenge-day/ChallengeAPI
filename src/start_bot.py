@@ -18,9 +18,11 @@ logger = logging.getLogger(__name__)
 
 TOKEN = settings.TELEGRAM_TOKEN
 
-def start_bot():
+async def start_bot():
     application = Application.builder().token(TOKEN).build()
     application.add_handler(CommandHandler("start", start))
+    await application.initialize()
+    logger.info("Bot initialized")
     # application.run_polling()
 
     return application

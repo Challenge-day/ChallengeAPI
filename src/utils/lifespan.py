@@ -18,10 +18,7 @@ async def lifespan(_: FastAPI):
     """Init telegram client"""
     application = start_bot()
     telegram_application["application"] = application
-
-    await application.initialize()
-    logger.info("Bot initialized")
-    
+   
     await application.start()
     logger.info("Telegram client is running.")
     
