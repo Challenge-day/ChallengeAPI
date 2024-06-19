@@ -2,6 +2,7 @@
 import logging
 import asyncio
 from fastapi import FastAPI
+from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
 from src.start_bot import start_bot
@@ -12,20 +13,16 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(_: FastAPI) -> AsyncIterator[None]:
     """Init telegram client"""
     application = await start_bot()
-    await application.initialize()
-    logger.info("Bot initialized")
     
-    bot_task = asyncio.create_task(application.start())
-    # await application.start()
-    # application.run_polling()
-    logger.info("Bot started")
+    await application.start()
+    logger.info("Telegram client is running.")
     
     yield
     
-    # await application.stop()
-    await bot_task.cancel()
-    await application.stop_running()
-    logger.info("Bot shut down")
+    await application.stop()
+    logger.info("Telegram client is down.")
+
+ 
