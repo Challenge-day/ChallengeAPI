@@ -1,7 +1,7 @@
 # start_bot.py
 import logging
 
-from telegram.ext import Updater, Application, CommandHandler
+from telegram.ext import Application, CommandHandler
 
 from src.db.config import settings
 from src.db.connect import engine
@@ -18,14 +18,10 @@ logger = logging.getLogger(__name__)
 
 TOKEN = settings.TELEGRAM_TOKEN
 
-async def start_bot():
+def start_bot():
     application = Application.builder().token(TOKEN).build()
-    
-    await application.initialize()
-    logger.info("Bot initialized")
-
     application.add_handler(CommandHandler("start", start))
-    # await application.run_polling()
+    # application.run_polling()
 
     return application
     
