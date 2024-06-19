@@ -1,10 +1,14 @@
+import logging
 from telegram import Update
 from telegram.ext import ContextTypes
-from src.db.connect import DBSession
 
+from src.db.connect import DBSession
 from src.models.entity import User, Auth
 
+logger = logging.getLogger(__name__)
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    logger.info("Received /start command")
     with DBSession() as session:
         try: # Check if user doesnt exist create user
              with session.begin():
@@ -37,7 +41,9 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         
         except Exception as er:
             session.rollback()
+            logger.error("Error occurred: %s", er)
             await update.message.reply_text(f"An error occurred: {er}")
+
 
             
             
