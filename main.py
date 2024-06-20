@@ -2,6 +2,7 @@
 import uvicorn
 
 from fastapi import FastAPI
+
 from src.utils.lifespan import lifespan
 from src.routes import referrals, users, auth  
 

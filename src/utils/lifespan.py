@@ -1,30 +1,34 @@
 # lifespan.py
 import logging
-import asyncio
 from fastapi import FastAPI
+from telegram.ext import CommandHandler
+
 from contextlib import asynccontextmanager
-from telegram.ext import Application
 
 from src.start_bot import start_bot
+from src.repositories.users import start
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
 )
 logger = logging.getLogger(__name__)
-telegram_application: dict[str, Application] = {}
+application = start_bot()
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     """Init telegram client"""
-    application = start_bot()
-    telegram_application["application"] = application
-   
-    await application.start()
-    logger.info("Telegram client is running.")
     
-    yield
+    async with application:
+        
+        await application.start()
+        logger.info("Telegram client is running.")
     
-    await application.stop()
-    logger.info("Telegram client is down.")
+        yield
+    
+        await application.stop()
+        logger.info("Telegram client is down.")
+       
 
+application.add_handler(CommandHandler("start", start))
+# application.run_polling()
  
