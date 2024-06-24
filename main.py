@@ -3,10 +3,10 @@ import uvicorn
 
 from fastapi import FastAPI
 
-from src.utils.lifespan import lifespan
+# from src.utils.application import lifespan
 from src.routes import referrals, users, auth  
 
-app = FastAPI(lifespan=lifespan, swagger_ui_parameters={"operationsSorter": "method"}) # add lifespan=lifespan,
+app = FastAPI(swagger_ui_parameters={"operationsSorter": "method"}) # add lifespan=lifespan,
 
 app.include_router(referrals.router, prefix="/api", tags=["referrals"])
 app.include_router(users.router, prefix="/api", tags=["users"])

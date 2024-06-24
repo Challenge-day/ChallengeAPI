@@ -1,23 +1,22 @@
 import logging
-from telegram import Update
-from telegram.ext import ContextTypes
+from aiogram import types
 
 from src.db.connect import DBSession
 from src.models.entity import User, Auth
 
 logger = logging.getLogger(__name__)
 
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def start_command(message: types.Message) -> None:
     logger.info("Received /start command")
     with DBSession() as session:
         try: # Check if user doesnt exist create user
              with session.begin():
-                 chat_id = update.message.chat_id
+                 chat_id = message.chat.id
                  user = User.get_user_by_chat_id(session, chat_id)
 
                  if not user:
-                     user_info = update.effective_user
-                     new_user = User(name=user_info.name, 
+                     user_info = message.from_user
+                     new_user = User(name=user_info.first_name, 
                                     lastname=user_info.last_name, 
                                     username=user_info.username,
                                     chat_id=user_info.id
@@ -34,16 +33,13 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                      session.add(new_auth)
                      session.commit()
 
-                     context.user_data['user'] = user_info
-                     await update.message.reply_text(f"Dear {user_info.name} you are registered successfully.")
+                     await message.answer(f"Dear {user_info.first_name} you are registered successfully.")
                  else:
-                     await update.message.reply_text(f"Welcome back, {user.name}!")
+                     await message.answer(f"Welcome back, {user.name}!")
         
         except Exception as er:
             session.rollback()
             logger.error("Error occurred: %s", er)
-            await update.message.reply_text(f"An error occurred: {er}")
-
-
-            
+            await message.answer(f"An error occurred: {er}")
+   
             
