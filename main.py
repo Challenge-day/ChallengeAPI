@@ -2,7 +2,8 @@
 import uvicorn
 
 from sqlalchemy.orm import Session
-from fastapi import FastAPI, Depends
+from sqlalchemy import text
+from fastapi import FastAPI, Depends, HTTPException, status
 
 from src.db.connect import get_db
 from src.routes import referrals, users, mining
