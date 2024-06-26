@@ -12,6 +12,10 @@ class Settings():
     POSTGRES_PORT = os.getenv('POSTGRES_PORT')
     POSTGRES_DB = os.getenv('POSTGRES_DB')
     POSTGRES_PATH = f"postgresql+psycopg2://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_DOMAIN}/{POSTGRES_DB}"
+    
+    TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
+    TELEGRAM_SECRET = os.getenv('TELEGRAM_SECRET')
+
 
 settings = Settings()
 
