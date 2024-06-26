@@ -17,7 +17,7 @@ class Role(enum.Enum):
 
 class User(Base):
     __tablename__ = 'users'
-    tg_id: Mapped[int] = mapped_column(Integer, nullable=False, unique=True)
+    telegram_id: Mapped[int] = mapped_column(Integer, nullable=False, unique=True)
     username: Mapped[str] = mapped_column(String(50), nullable=False)
     tasks: Mapped[List["Task"]] = relationship("Task", back_populates="user")
     points: Mapped[int] = mapped_column(Integer, default=0)
@@ -47,7 +47,7 @@ class Referral(Base):
 
 class MiningSession(Base):
     __tablename__ = "mining_session"
-    tg_id: Mapped[int] = mapped_column(Integer, nullable=False, unique=True)
+    telegram_id: Mapped[int] = mapped_column(Integer, nullable=False, unique=True)
     start_time: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     end_time: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     speed: Mapped[float] = mapped_column(Float, default=1.000)
