@@ -1,18 +1,16 @@
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from telegram import Update
 
 from src.models.entity import User
 from src.db.connect import get_db
-from src.utils import application
 
 router = APIRouter()
 
 
-@router.post("/users/{chat_id}")
-async def get_user_by_chat_id(chat_id: int, db: Session = Depends(get_db)):
+@router.post("/users/{tg_id}")
+async def get_user_by_chat_id(tg_id: int, db: Session = Depends(get_db)):
     
-    user = User.get_user_by_chat_id(db, chat_id)
+    user = User.get_user_by_chat_id(db, tg_id)
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return user

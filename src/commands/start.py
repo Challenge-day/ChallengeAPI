@@ -9,17 +9,17 @@ logger = logging.getLogger(__name__)
 async def start_command(message: types.Message) -> None:
     logger.info("Received /start command")
     with DBSession() as session:
-        try: # Check if user doesnt exist create user
+        try: # Check if user doesn't exist create user
              with session.begin():
-                 chat_id = message.chat.id
-                 user = User.get_user_by_chat_id(session, chat_id)
+                 tg_id = message.chat.id
+                 user = User.get_user_by_chat_id(session, tg_id)
 
                  if not user:
                      user_info = message.from_user
                      new_user = User(name=user_info.first_name, 
                                     lastname=user_info.last_name, 
                                     username=user_info.username,
-                                    chat_id=user_info.id
+                                    tg_id=user_info.id
                                     )
                      session.add(new_user)
                      session.flush()
@@ -27,7 +27,7 @@ async def start_command(message: types.Message) -> None:
                     # Create an Auth entry for the new user
                      new_auth = Auth(
                          username=user_info.username or "",
-                         chat_id=user_info.id
+                         tg_id=user_info.id
                      )
 
                      session.add(new_auth)

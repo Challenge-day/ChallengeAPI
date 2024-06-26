@@ -12,7 +12,7 @@ class Base(DeclarativeBase):
 class User(Base):
     __tablename__ = 'users'
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    chat_id: Mapped[int] = mapped_column(BigInteger, unique=True)
+    tg_id: Mapped[int] = mapped_column(Integer, unique=True)
     name: Mapped[str] = mapped_column(String(50), nullable=False)
     username: Mapped[str] = mapped_column(String(50), nullable=False)
     lastname: Mapped[str] = mapped_column(String(50), nullable=False)
@@ -24,18 +24,18 @@ class User(Base):
     tasks: Mapped[List["Task"]] = relationship("Task", back_populates="user")
     referrals: Mapped[List["Referral"]] = relationship("Referral", back_populates="referrer", foreign_keys="[Referral.referrer_id]")
 
-    def __init__(self, name, lastname, username, chat_id, language_code='', created_at=None, updated_at=None):
+    def __init__(self, name, lastname, username, tg_id, language_code='', created_at=None, updated_at=None):
         self.name = name
         self.lastname = lastname
-        self.chat_id = chat_id
+        self.tg_id = tg_id
         self.username = username
         self.language_code = language_code
         self.created_at = created_at or datetime.now()
         self.updated_at = updated_at or datetime.now()
     
     @staticmethod
-    def get_user_by_chat_id(session, chat_id):
-        return session.query(User).filter_by(chat_id=chat_id).first()
+    def get_user_by_chat_id(session, tg_id):
+        return session.query(User).filter_by(tg_id=tg_id).first()
     
 class Task(Base):
     __tablename__ = "tasks"
@@ -63,12 +63,12 @@ class Referral(Base):
 class Auth(Base):
     __tablename__ = 'auth'
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    tg_id: Mapped[int] = mapped_column(Integer, nullable=False)
     username: Mapped[str] = mapped_column(String(50), nullable=False)
-    chat_id: Mapped[int] = mapped_column(BigInteger, nullable=False)
 
-    def __init__(self, username, chat_id):
+    def __init__(self, username, tg_id):
         self.username = username
-        self.chat_id = chat_id
+        self.tg_id = tg_id
 
 class MiningSession(Base):
     __tablename__ = "mining_session"
