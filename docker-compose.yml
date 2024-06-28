@@ -22,7 +22,7 @@ services:
       - postgres
     ports:
       - "8000:8000"
-    command: uvicorn main:app --host 0.0.0.0
+    command: uvicorn --reload main:app --host 0.0.0.0
     platform: linux/amd64
 
 volumes:

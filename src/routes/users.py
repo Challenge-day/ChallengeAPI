@@ -8,10 +8,10 @@ from src.db.connect import get_db
 router = APIRouter()
 
 
-@router.get("/users/{tg_id}")
-async def get_user_by_chat_id(tg_id: int, db: Session = Depends(get_db)):
+@router.get("/users/{telegram_id}")
+async def get_user_by_telegram_id(telegram_id: int, db: Session = Depends(get_db)):
     
-    user = User.get_user_by_chat_id(db, tg_id)
+    user = User.get_user_by_telegram_id(db, telegram_id)
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return user
@@ -19,14 +19,15 @@ async def get_user_by_chat_id(tg_id: int, db: Session = Depends(get_db)):
 
 @router.post("/users")
 async def create_user(user_info: UserCreate, db: Session = Depends(get_db)):
-    existing_user = User.get_user_by_chat_id(db, user_info.tg_id)
+    existing_user = User.get_user_by_telegram_id(db, user_info.telegram_id)
     if existing_user:
         raise HTTPException(status_code=400, detail="User already exists")
     
     new_user = User(
+        telegram_id=user_info.telegram_id,
         first_name=user_info.first_name,
+        last_name=user_info.last_name,
         username=user_info.username,
-        tg_id=user_info.tg_id,
         language_code=user_info.language_code
     )
     db.add(new_user)

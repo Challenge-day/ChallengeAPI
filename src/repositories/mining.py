@@ -1,7 +1,10 @@
-from sqlalchemy.orm import Session
-from src.models.entity import MiningSession
 from datetime import datetime, timedelta
+
+from sqlalchemy.orm import Session
+
+from src.models.entity import MiningSession
 from src.services.mining_service import calculate_earned_chl_since_last_check
+
 
 async def start_mining(db: Session, telegram_id: int):
     """
@@ -19,14 +22,15 @@ async def start_mining(db: Session, telegram_id: int):
     end_time = datetime.now() + timedelta(hours=4)
     speed = 2.5
     db_mining = MiningSession(
-        telegram_id=telegram_id, start_time=datetime.now(), 
-        end_time=end_time, 
+        telegram_id=telegram_id, start_time=datetime.now(),
+        end_time=end_time,
         speed=speed
-        )
+    )
     db.add(db_mining)
     db.commit()
     db.refresh(db_mining)
     return db_mining
+
 
 async def get_mining_session(db: Session, telegram_id: int):
     """
@@ -39,7 +43,9 @@ async def get_mining_session(db: Session, telegram_id: int):
     Returns:
         MiningSession: The most recent mining session for the given user, or None if no session exists.
     """
-    return db.query(MiningSession).filter(MiningSession.telegram_id == telegram_id).order_by(MiningSession.start_time.desc()).first()
+    return db.query(MiningSession).filter(MiningSession.telegram_id == telegram_id).order_by(
+        MiningSession.start_time.desc()).first()
+
 
 async def update_mining_status(db: Session, telegram_id: int):
     """
@@ -58,7 +64,8 @@ async def update_mining_status(db: Session, telegram_id: int):
     if not mining_session:
         return None
     current_time = datetime.now()
-    earned_chl = calculate_earned_chl_since_last_check(mining_session.start_time, current_time, mining_session.last_checked)
+    earned_chl = calculate_earned_chl_since_last_check(mining_session.start_time, current_time,
+                                                       mining_session.last_checked)
     mining_session.earned_chl += earned_chl
     mining_session.last_checked = current_time
 
@@ -75,6 +82,3 @@ async def update_mining_status(db: Session, telegram_id: int):
     db.commit()
     db.refresh(mining_session)
     return mining_session
-
-
-

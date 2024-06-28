@@ -1,7 +1,9 @@
 from sqlalchemy.orm import Session
+
 from src.models.entity import User, Referral
 
-def generate_referral_url(telegram_id: int) -> int:
+
+def generate_referral_url(telegram_id: int) -> str:
     """
     The generate_referral_url function takes a Telegram user ID and returns a referral URL.
     The referral URL is used to invite new users to the bot.
@@ -11,6 +13,7 @@ def generate_referral_url(telegram_id: int) -> int:
     :return: A referral link
     """
     return f"https://t.me/ChallengeDayBot/app?startapp=ref_{telegram_id}"
+
 
 async def handle_referral(telegram_id: int, db: Session) -> User:
     """
