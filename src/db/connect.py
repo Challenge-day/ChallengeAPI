@@ -7,7 +7,7 @@ from .config import settings
 SQLALCHEMY_URL = settings.POSTGRES_PATH
 
 engine = create_engine(SQLALCHEMY_URL, echo=False, pool_size=5, max_overflow=0)
-DBSession = sessionmaker(bind=engine)
+DBSession = sessionmaker(bind=engine, expire_on_commit=False)
 
 
 def get_db():

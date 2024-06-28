@@ -1,5 +1,6 @@
 # main.py
 import uvicorn
+
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 from fastapi import FastAPI, Depends, HTTPException, status
@@ -8,21 +9,16 @@ from src.db.connect import get_db
 from src.routes import referrals, users, mining
 
 
-app = FastAPI(swagger_ui_parameters={"operationsSorter": "method"})
+# from src.utils.application import lifespan
+from src.routes import referrals, users, auth  
+
+app = FastAPI(swagger_ui_parameters={"operationsSorter": "method"}) # add lifespan=lifespan,
+
 app.include_router(referrals.router, prefix="/api", tags=["referrals"])
 app.include_router(users.router, prefix="/api", tags=["users"])
+app.include_router(auth.router, prefix="/api", tags=["auth"])
 app.include_router(mining.router, prefix="/mining", tags=["mining"])
 
-@app.get("/", name="root")
-def read_root():
-    """
-    The read_root function is a view function that returns the root of the API.
-    It's purpose is to provide a simple way for users to test if their connection
-    to the API is working properly.
-
-    :return: A dictionary
-    """
-    return {"message": "FastApi is working!"}
 
 @app.get("/api/healthchecker")
 def healthchecker(db: Session = Depends(get_db)):
@@ -47,6 +43,8 @@ def healthchecker(db: Session = Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             detail="Error connecting to the database")
 
+
 if __name__ == '__main__':
     uvicorn.run(app="main:app", reload=True, host="127.0.0.1", port=8000)
+    
    
