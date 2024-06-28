@@ -3,15 +3,15 @@ from src.models.entity import MiningSession
 from datetime import datetime, timedelta
 from src.services.mining_service import calculate_earned_chl_since_last_check
 
-async def start_mining(db: Session, tg_id: str):
+async def start_mining(db: Session, telegram_id: int):
     """
-    Starts a new mining session for the user with the given Telegram ID (tg_id).
+    Starts a new mining session for the user with the given Telegram ID (telegram_id).
     
     The mining session is set to last for 4 hours, with an initial mining speed of 2.5. The session is persisted to the database using the provided SQLAlchemy session (db).
     
     Args:
         db (Session): The SQLAlchemy session to use for database operations.
-        tg_id (str): The Telegram ID of the user for whom to start the mining session.
+        telegram_id (int): The Telegram ID of the user for whom to start the mining session.
     
     Returns:
         MiningSession: The newly created mining session object.
@@ -19,7 +19,7 @@ async def start_mining(db: Session, tg_id: str):
     end_time = datetime.now() + timedelta(hours=4)
     speed = 2.5
     db_mining = MiningSession(
-        tg_id=tg_id, start_time=datetime.now(), 
+        telegram_id=telegram_id, start_time=datetime.now(), 
         end_time=end_time, 
         speed=speed
         )
@@ -28,33 +28,33 @@ async def start_mining(db: Session, tg_id: str):
     db.refresh(db_mining)
     return db_mining
 
-async def get_mining_session(db: Session, tg_id: str):
+async def get_mining_session(db: Session, telegram_id: int):
     """
-    Retrieves the most recent mining session for the user with the given Telegram ID (tg_id).
+    Retrieves the most recent mining session for the user with the given Telegram ID (telegram_id).
     
     Args:
         db (Session): The SQLAlchemy session to use for database operations.
-        tg_id (str): The Telegram ID of the user for whom to retrieve the mining session.
+        telegram_id (int): The Telegram ID of the user for whom to retrieve the mining session.
     
     Returns:
         MiningSession: The most recent mining session for the given user, or None if no session exists.
     """
-    return db.query(MiningSession).filter(MiningSession.tg_id == tg_id).order_by(MiningSession.start_time.desc()).first()
+    return db.query(MiningSession).filter(MiningSession.telegram_id == telegram_id).order_by(MiningSession.start_time.desc()).first()
 
-async def update_mining_status(db: Session, tg_id: str):
+async def update_mining_status(db: Session, telegram_id: int):
     """
-    Updates the mining status for the user with the given Telegram ID (tg_id).
+    Updates the mining status for the user with the given Telegram ID (telegram_id).
     
     This function retrieves the most recent mining session for the user, calculates the amount of CHL earned since the last check, updates the earned CHL and last checked time in the mining session, and adjusts the mining speed based on the elapsed time. The updated mining session is then committed to the database.
     
     Args:
         db (Session): The SQLAlchemy session to use for database operations.
-        tg_id (str): The Telegram ID of the user for whom to update the mining status.
+        telegram_id (int): The Telegram ID of the user for whom to update the mining status.
     
     Returns:
         MiningSession: The updated mining session object.
     """
-    mining_session = get_mining_session(db, tg_id)
+    mining_session = get_mining_session(db, telegram_id)
     if not mining_session:
         return None
     current_time = datetime.now()

@@ -6,7 +6,7 @@ class Referral(BaseModel):
     referred_id: int
 
 class ReferralResponse(BaseModel):
-    id: int
+    telegram_id: int
     is_active: bool
     referrer_id: int
     referred_id: int
