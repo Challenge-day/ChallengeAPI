@@ -15,7 +15,6 @@ class Base(DeclarativeBase):
 
 class User(Base):
     __tablename__ = 'users'
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
     telegram_id: Mapped[int] = mapped_column(Integer, unique=True)
     first_name: Mapped[str] = mapped_column(String(50), nullable=False)
     last_name: Mapped[str] = mapped_column(String(50), nullable=False)
@@ -23,7 +22,7 @@ class User(Base):
     points: Mapped[int] = mapped_column(Integer, default=0)
     language_code: Mapped[str] = mapped_column(String(10))
 
-    tasks: Mapped[List["Task"]] = relationship("Task", back_populates="user")
+    # tasks: Mapped[List["Task"]] = relationship("Task", back_populates="user")
     referrals: Mapped[List["Referral"]] = relationship("Referral", back_populates="referrer",
                                                        foreign_keys="[Referral.referrer_id]")
 
@@ -47,8 +46,8 @@ class Task(Base):
     name: Mapped[str] = mapped_column(String(50), nullable=False)
     description: Mapped[str] = mapped_column(String(50), nullable=False)
     completed: Mapped[bool] = mapped_column(Boolean, default=False, nullable=True)
-    user_id: Mapped[int] = mapped_column(BigInteger, ForeignKey('users.id'), nullable=False)
-    user: Mapped["User"] = relationship("User", back_populates="tasks")
+    telegram_id: Mapped[int] = mapped_column(BigInteger, ForeignKey('users.telegram_id'), nullable=False)
+    # user: Mapped["User"] = relationship("User", back_populates="tasks")
 
 
 class Referral(Base):
@@ -64,8 +63,7 @@ class Referral(Base):
 
 class Auth(Base):
     __tablename__ = 'auth'
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    telegram_id: Mapped[int] = mapped_column(Integer, nullable=False)
+    telegram_id: Mapped[int] = mapped_column(BigInteger, ForeignKey('users.telegram_id'), nullable=False)
     username: Mapped[str] = mapped_column(String(50), nullable=False)
 
     def __init__(self, username, telegram_id):
@@ -75,7 +73,7 @@ class Auth(Base):
 
 class MiningSession(Base):
     __tablename__ = "mining_session"
-    telegram_id: Mapped[int] = mapped_column(Integer, nullable=False, unique=True)
+    telegram_id: Mapped[int] = mapped_column(BigInteger, ForeignKey('users.telegram_id'), nullable=False)
     start_time: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     end_time: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     speed: Mapped[float] = mapped_column(Float, default=1.000)
