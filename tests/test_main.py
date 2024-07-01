@@ -5,16 +5,12 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from main import app
-from models.entity import Base
-from src.db.config import settings
+from src.models.entity import Base
 from src.db.connect import get_db
 
-
-SQLALCHEMY_URL = settings.POSTGRES_PATH
-
-engine = create_engine(SQLALCHEMY_URL, echo=False, pool_size=5, max_overflow=0)
+SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-DBSession = sessionmaker(bind=engine)
 
 def override_get_db():
     try:
